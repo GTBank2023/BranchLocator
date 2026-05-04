@@ -159,15 +159,18 @@ function renderBranches() {
 
 /* ✅ LOCATION BUTTON (OPTIONAL BOOST) */
 function useMyLocation() {
+  const div = document.getElementById("branchList");
+  div.innerHTML = "📍 Requesting location...";
+
   if (!navigator.geolocation) {
-    alert("Geolocation not supported");
+    div.innerHTML = "❌ Your device doesn't support location";
     return;
   }
 
   navigator.geolocation.getCurrentPosition(
-    pos => {
-      userLat = pos.coords.latitude;
-      userLon = pos.coords.longitude;
+    function (position) {
+      userLat = position.coords.latitude;
+      userLon = position.coords.longitude;
 
       L.marker([userLat, userLon])
         .addTo(map)
@@ -176,10 +179,32 @@ function useMyLocation() {
 
       map.setView([userLat, userLon], 13);
 
-      renderBranches(); // 🔥 update distances
+      renderBranches();
     },
-    err => {
-      alert("Location permission denied");
+    function (error) {
+      console.log(error);
+
+      if (error.code === 1) {
+        div.innerHTML = `
+          ❌ Location permission denied<br><br>
+          👉 Fix it:
+          <ul>
+            <li>Tap <b>aA</b> in Safari</li>
+            <li>Website Settings</li>
+            <li>Allow Location</li>
+          </ul>
+          <button onclick="useMyLocation()">Try Again</button>
+        `;
+      } else if (error.code === 2) {
+        div.innerHTML = "❌ Location unavailable (GPS issue)";
+      } else {
+        div.innerHTML = "❌ Location timeout. Try again.";
+      }
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
     }
   );
 }
