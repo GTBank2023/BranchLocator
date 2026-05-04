@@ -1,131 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GTBank Tanzania Branch Locator</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GTBank Tanzania Branch Locator</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: "Poppins", Arial, sans-serif;
-      background: #f6f7fb;
-      color: #111;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: "Poppins", Arial, sans-serif;
+  background: #f6f7fb;
+}
 
-    .topbar {
-      background: #dc4405;
-      color: white;
-      padding: 16px 20px;
-      font-size: 18px;
-      font-weight: 700;
-    }
+.topbar {
+  background: #dc4405;
+  color: white;
+  padding: 16px;
+  font-weight: 700;
+}
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 16px;
-      padding: 16px;
-    }
+.layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 16px;
+  padding: 16px;
+}
 
-    #map {
-      height: 80vh;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    }
+#map {
+  height: 80vh;
+  border-radius: 18px;
+}
 
-    .side {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
-    button {
-      padding: 12px 16px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      background: #dc4405;
-      color: white;
-    }
+button {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #dc4405;
+  color: white;
+  font-weight: 600;
+}
 
-    #branchList {
-      background: white;
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-      max-height: 75vh;
-      overflow: auto;
-    }
+#branchList {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
 
-    .branch-card {
-      border: 1px solid #e4e8f2;
-      padding: 14px;
-      margin-bottom: 12px;
-      border-radius: 14px;
-      background: #fbfcff;
-    }
+.branch-card {
+  border: 1px solid #eee;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
 
-    .branch-name {
-      font-weight: 700;
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
+.direction-link {
+  color: #dc4405;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    .branch-location {
-      font-size: 14px;
-      color: #444;
-      margin-bottom: 6px;
-    }
+/* MOBILE */
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
 
-    .branch-meta {
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .branch-hours {
-      font-size: 13px;
-      color: #667085;
-      margin-bottom: 10px;
-    }
-
-    .direction-link {
-      color: #dc4405;
-      text-decoration: underline;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* 📱 MOBILE */
-    @media (max-width: 768px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      #map {
-        height: 45vh;
-      }
-
-      #branchList {
-        max-height: none;
-      }
-    }
-
-    /* 💻 LARGE SCREENS */
-    @media (min-width: 1200px) {
-      #map {
-        height: 85vh;
-      }
-    }
-  </style>
+  #map {
+    height: 45vh;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -137,22 +95,17 @@
 
   <div class="side">
     <button onclick="useMyLocation()">Use My Location</button>
-    <div id="branchList"></div>
+    <div id="branchList">Tap "Use My Location"</div>
   </div>
 </div>
 
 <script>
-function initMap() {
-  var map = L.map('map').setView([-6.788108, 39.216809], 12);
+var map = L.map('map').setView([-6.788108, 39.216809], 12);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors'
+}).addTo(map);
 
-  return map;
-}
-
-var map = initMap();
 var userLat, userLon;
 
 const branches = [
@@ -174,54 +127,38 @@ const branches = [
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
   var R = 6371;
-  var dLat = (lat2 - lat1) * (Math.PI / 180);
-  var dLon = (lon2 - lon1) * (Math.PI / 180);
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLon = (lon2 - lon1) * Math.PI / 180;
+
   var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-    Math.cos((lat2 * Math.PI) / 180) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
 
-function showDirectionsToBranch(latitude, longitude) {
-  navigator.geolocation.getCurrentPosition(function (position) {
-    userLat = position.coords.latitude;
-    userLon = position.coords.longitude;
-
-    if (window.currentRoutingControl) {
-      map.removeControl(window.currentRoutingControl);
-    }
-
-    window.currentRoutingControl = L.Routing.control({
-      waypoints: [
-        L.latLng(userLat, userLon),
-        L.latLng(latitude, longitude)
-      ],
-      addWaypoints: false,
-      draggableWaypoints: false
-    }).addTo(map);
-
-    map.setView([latitude, longitude], 14);
-  });
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 }
 
 function showNearbyBranches() {
-  var div = document.getElementById("branchList");
-  div.innerHTML = "<h2>Nearby Branches</h2>";
+  const div = document.getElementById("branchList");
 
-  branches.forEach(function (branch) {
-    var distance = calculateDistance(userLat, userLon, branch.latitude, branch.longitude);
+  if (!userLat) {
+    div.innerHTML = "⚠️ Location not available";
+    return;
+  }
+
+  div.innerHTML = "<h3>Nearby Branches</h3>";
+
+  branches.forEach(branch => {
+    const distance = calculateDistance(userLat, userLon, branch.latitude, branch.longitude);
 
     div.innerHTML += `
       <div class="branch-card">
-        <div class="branch-name">${branch.name}</div>
-        <div class="branch-location">${branch.location}</div>
-        <div class="branch-meta">${distance.toFixed(2)} km away</div>
-        <div class="branch-hours">🕒 ${branch.hours}</div>
-        <div class="direction-link" onclick="showDirectionsToBranch(${branch.latitude}, ${branch.longitude})">
+        <b>${branch.name}</b><br>
+        ${branch.location}<br>
+        ${distance.toFixed(2)} km away<br>
+        🕒 ${branch.hours}<br>
+        <div class="direction-link" onclick="showDirections(${branch.latitude}, ${branch.longitude})">
           Get Directions
         </div>
       </div>
@@ -229,26 +166,64 @@ function showNearbyBranches() {
   });
 }
 
-function useMyLocation() {
-  navigator.geolocation.getCurrentPosition(function (position) {
-    userLat = position.coords.latitude;
-    userLon = position.coords.longitude;
+function showDirections(lat, lon) {
+  if (!userLat) {
+    alert("Enable location first");
+    return;
+  }
 
-    L.marker([userLat, userLon])
-      .addTo(map)
-      .bindPopup("You are here")
-      .openPopup();
+  if (window.route) {
+    map.removeControl(window.route);
+  }
 
-    branches.sort((a, b) =>
-      calculateDistance(userLat, userLon, a.latitude, a.longitude) -
-      calculateDistance(userLat, userLon, b.latitude, b.longitude)
-    );
-
-    showNearbyBranches();
-  });
+  window.route = L.Routing.control({
+    waypoints: [
+      L.latLng(userLat, userLon),
+      L.latLng(lat, lon)
+    ],
+    addWaypoints: false,
+    draggableWaypoints: false
+  }).addTo(map);
 }
 
-useMyLocation();
+function useMyLocation() {
+  const div = document.getElementById("branchList");
+  div.innerHTML = "📍 Getting your location...";
+
+  if (!navigator.geolocation) {
+    div.innerHTML = "❌ Geolocation not supported";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      userLat = position.coords.latitude;
+      userLon = position.coords.longitude;
+
+      L.marker([userLat, userLon])
+        .addTo(map)
+        .bindPopup("You are here")
+        .openPopup();
+
+      map.setView([userLat, userLon], 13);
+
+      branches.sort((a, b) =>
+        calculateDistance(userLat, userLon, a.latitude, a.longitude) -
+        calculateDistance(userLat, userLon, b.latitude, b.longitude)
+      );
+
+      showNearbyBranches();
+    },
+    function(error) {
+      console.error(error);
+      div.innerHTML = "❌ Please allow location access on your phone";
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000
+    }
+  );
+}
 </script>
 
 </body>
